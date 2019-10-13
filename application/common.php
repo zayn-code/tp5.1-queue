@@ -29,3 +29,20 @@ function _doCurl($url, $type = 'get', $data = [])
     curl_close($ch);
     return $output;
 }
+
+function _success($msg, $data=[])
+{
+    return json([
+        'msg' => $msg,
+        'code' => 200,
+        'data' => $data
+    ]);
+}
+
+function _fail($msg)
+{
+    return json([
+        'msg' => $msg,
+        'code' => 201,
+    ]);
+}

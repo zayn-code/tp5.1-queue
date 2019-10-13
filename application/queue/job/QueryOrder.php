@@ -36,7 +36,7 @@ class QueryOrder
         } else {
             echo '查询接口错误，次数：' . $job->attempts();
             if ($job->attempts() >= self::queryAttempts) {
-                $job->delete();
+                $job->failed();
             } else {
                 $job->release(self::queryDelay);
             }

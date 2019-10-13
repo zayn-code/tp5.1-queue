@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "0cdf7bf35266e3f1f4a7ab73de325642",
+    "content-hash": "12efad90e633e8e6959b0490fa48af45",
     "packages": [
         {
             "name": "topthink/framework",
@@ -18,13 +18,7 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/top-think/framework/zipball/12d15c29d5d6a972fc8bfc8db005d64d4786028c",
                 "reference": "12d15c29d5d6a972fc8bfc8db005d64d4786028c",
-                "shasum": "",
-                "mirrors": [
-                    {
-                        "url": "https://mirrors.aliyun.com/composer/dists/%package%/%reference%.%type%",
-                        "preferred": true
-                    }
-                ]
+                "shasum": ""
             },
             "require": {
                 "php": ">=5.6.0",
@@ -65,26 +59,17 @@
         },
         {
             "name": "topthink/think-helper",
-            "version": "v3.1.2",
+            "version": "v3.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/top-think/think-helper.git",
-                "reference": "a629c4271fdf3d7e7c6d89089791417cb4796a2c"
+                "reference": "92c24d1057118dada3ca18232cd18ef38a831ad6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/top-think/think-helper/zipball/a629c4271fdf3d7e7c6d89089791417cb4796a2c",
-                "reference": "a629c4271fdf3d7e7c6d89089791417cb4796a2c",
-                "shasum": "",
-                "mirrors": [
-                    {
-                        "url": "https://mirrors.aliyun.com/composer/dists/%package%/%reference%.%type%",
-                        "preferred": true
-                    }
-                ]
-            },
-            "require": {
-                "php": ">=7.1.0"
+                "url": "https://api.github.com/repos/top-think/think-helper/zipball/92c24d1057118dada3ca18232cd18ef38a831ad6",
+                "reference": "92c24d1057118dada3ca18232cd18ef38a831ad6",
+                "shasum": ""
             },
             "type": "library",
             "autoload": {
@@ -106,7 +91,7 @@
                 }
             ],
             "description": "The ThinkPHP6 Helper Package",
-            "time": "2019-07-11T04:35:03+00:00"
+            "time": "2019-07-10T08:52:50+00:00"
         },
         {
             "name": "topthink/think-installer",
@@ -120,13 +105,7 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/top-think/think-installer/zipball/f5400a12c60e513911aef41fe443fa6920952675",
                 "reference": "f5400a12c60e513911aef41fe443fa6920952675",
-                "shasum": "",
-                "mirrors": [
-                    {
-                        "url": "https://mirrors.aliyun.com/composer/dists/%package%/%reference%.%type%",
-                        "preferred": true
-                    }
-                ]
+                "shasum": ""
             },
             "require": {
                 "composer-plugin-api": "^1.0"
@@ -167,13 +146,7 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/top-think/think-queue/zipball/d9b8f38c7af8ad770257b0d7db711ce8b12a6969",
                 "reference": "d9b8f38c7af8ad770257b0d7db711ce8b12a6969",
-                "shasum": "",
-                "mirrors": [
-                    {
-                        "url": "https://mirrors.aliyun.com/composer/dists/%package%/%reference%.%type%",
-                        "preferred": true
-                    }
-                ]
+                "shasum": ""
             },
             "require": {
                 "topthink/framework": "5.1.*",
@@ -215,7 +188,8 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": ">=5.6.0"
+        "php": ">=5.6.0",
+        "ext-json": "*"
     },
     "platform-dev": []
 }
