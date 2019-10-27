@@ -23,6 +23,41 @@ class Pay extends Controller
             'attach' => '10012',
             'notify_url' => 'http://127.0.0.1/cs.php'
         ];
+        //下面是赞赏码支付------------------
+        $dateDiff = date('Y-m-d H:i:s',strtotime('-2 minute'));
+        $userList = Db::table('user u')
+            ->join('user_moneys um','um.uid=u.id')
+            ->where(['status'=>1,'money'=>$data['money']])
+            ->where('datetime','<',$dateDiff)
+            ->select();
+        var_dump($userList);
+        if(empty($userList)){
+            return _fail('暂无收款码');
+        }
+        $result = $userList[array_rand($userList)];
+        $order = [
+            'order_id' => date('YmdHis') . rand(1000, 9999),
+            'attach' => $data['attach'],
+            'money' => $result['money'],
+            'date' => date('Y-m-d H:i:s'),
+            'notify_url' => $data['notify_url'],
+            'uid'=>$result['uid']
+        ];
+        Db::startTrans();
+        $judInsert = Db::table('order')->insert($order);
+        $judUpdate = Db::table('user_moneys')->where(['id'=>$result['id']])->update(['datetime'=>date('Y-m-d H:i:s')]);
+        if ($judInsert && $judUpdate) {
+            Db::commit();
+            Cache::set($result['account'] . '_' . $result['money'], $order['order_id'], 60);
+            return _success('下单成功！', ['money' => $result['money'], 'url' => $result['ewm']]);
+        } else {
+            Db::rollback();
+            return _fail('下单失败！');
+        }
+
+
+
+        //以下是个人转账代码-----------------------
         $userList = Db::table('user')->where(['status' => 1])->select();
         if (empty($userList)) {
             return _fail('暂无收款码');

@@ -32,8 +32,11 @@ class Pay extends Controller
         $order_id = Cache::get($user['account'] . '_' . $data['money']);
         $findOrder = Db::table('order')->where(['order_id' => $order_id])->find();
         if (empty($order_id) || empty($findOrder)) {
-            return _success('订单不存在！');
+            return _fail('订单不存在！');
         }
+        Db::table('user_moneys')
+            ->where(['uid' => $findOrder['uid'], 'money' => $data['money']])
+            ->update(['datetime' => '1970-01-01 00:00:00']);
         Db::table('order')->where(['order_id' => $order_id])->update(['status' => 1]);
         Db::table('user')->where(['token' => $data['token']])->setInc('total_money', $data['money']);
         Queue::push('app\queue\job\NotifyOrder', $findOrder, 'NotifyOrder');
