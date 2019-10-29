@@ -83,7 +83,7 @@ class Pay extends Controller
         ];
         if (Db::table('order')->insert($order)) {
             Cache::set($user['account'] . '_' . $payMoney, $order['order_id'], 60);
-            return _success('下单成功！', ['money' => $payMoney, 'url' => $user['ewm'], 'order' => $order['order_id']]);
+            return _success('下单成功！', ['money' => $payMoney, 'url' => 'http://' . $_SERVER['HTTP_HOST'] . $user['ewm'], 'order' => $order['order_id']]);
         } else {
             return _fail('下单失败！');
         }
