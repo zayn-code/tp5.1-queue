@@ -13,10 +13,10 @@ class Pay extends Controller
     public function queryOrder(Request $request)
     {
         $data = [
-            'orderID' => '1569552131150',
-            'uid' => '',
+            'orderID'   => '1569552131150',
+            'uid'       => '',
             'notifyUrl' => '',
-            'money' => ''
+            'money'     => ''
         ];
         $judge = Queue::push('app\queue\job\QueryOrder', $data, 'queryOrder');
         echo $judge;
@@ -26,6 +26,13 @@ class Pay extends Controller
     {
         $data = Request::post();
         $user = Db::table('user')->where(['token' => $data['token']])->find();
+        $notifyLog = [
+            'money'    => $data['money'],
+            'token'    => $data['token'],
+            'datetime' => date('Y-m-d H:i:s'),
+            'uid'      => $user ? $user['id'] : ''
+        ];
+        Db::table('front_notify')->insert($notifyLog);
         if (empty($user)) {
             return _fail('token错误');
         }
