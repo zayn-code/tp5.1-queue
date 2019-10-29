@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <!-- import CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+</head>
+<body>
+<div id="app">
+    <el-table
+            :data="tableData"
+            border
+            style="width: 100%">
+        <el-table-column
+                prop="id"
+                label="ID">
+        </el-table-column>
+        <el-table-column
+                prop="account"
+                label="账户">
+        </el-table-column>
+        <el-table-column
+                prop="moneys"
+                label="收款金额">
+        </el-table-column>
+        <el-table-column
+                label="收款码">
+            <template slot-scope="scope">
+                <img :src="scope.row.ewm" style="width:80px" />
+            </template>
+        </el-table-column>
+        <el-table-column
+                label="状态">
+            <template slot-scope="scope">
+                <el-button
+                        :type="scope.row.status === 1 ? 'success' : 'error'" @click="changeStatus(scope.row.id,scope.row.status)">{{scope.row.status ? '开启中' : '未开启'}}</el-button>
+            </template>
+        </el-table-column>
+    </el-table>
+</div>
+</body>
+<script src="/static/js/jquery.min.js"></script>
+<!-- import Vue before Element -->
+<script src="/static/js/vue.js"></script>
+<!-- import JavaScript -->
+<script src="https://unpkg.com/element-ui/lib/index.js"></script>
+<script>
+    var list = '{$list}'.replace(/&quot;/g, '"');
+    list = JSON.parse(list);
+    new Vue({
+        el: '#app',
+        data: function () {
+            return {
+                tableData: list
+            }
+        },
+        methods:{
+            changeStatus:function(id,status){
+                const that = this;
+                $.post(
+                    '{:url("changeStatus")}',
+                    {id:id,status:status},
+                    function (res) {
+                        window.location.reload();
+                    }
+                )
+            }
+        }
+    })
+</script>
+</html>

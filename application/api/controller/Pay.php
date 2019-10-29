@@ -17,12 +17,12 @@ class Pay extends Controller
 {
     public function order()
     {
-//        $data = Request::post();
-        $data = [
-            'money' => 1,
-            'attach' => '10012',
-            'notify_url' => 'http://127.0.0.1/cs.php'
-        ];
+        $data = Request::post();
+//        $data = [
+//            'money' => 1,
+//            'attach' => '10012',
+//            'notify_url' => 'http://127.0.0.1/cs.php'
+//        ];
         //下面是赞赏码支付------------------
         $dateDiff = date('Y-m-d H:i:s',strtotime('-2 minute'));
         $userList = Db::table('user u')
@@ -30,7 +30,6 @@ class Pay extends Controller
             ->where(['status'=>1,'money'=>$data['money']])
             ->where('datetime','<',$dateDiff)
             ->select();
-        var_dump($userList);
         if(empty($userList)){
             return _fail('暂无收款码');
         }

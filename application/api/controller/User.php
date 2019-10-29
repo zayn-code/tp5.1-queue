@@ -47,11 +47,11 @@ class User extends Controller
             if ($userMoneys) {
                 $delUserMoneys = Db::table('user_moneys')->where(['uid' => $find['id']])->delete();
             }
-            $moneys = explode(',', $data['moneys']);
+            $moneys = array_filter(explode(',', $data['moneys']));
             $userMoneyList = [];
             foreach ($moneys as $money) {
                 $userMoneyList[] = [
-                    'uid' => $find['id'],
+                    'uid'   => $find['id'],
                     'money' => $money
                 ];
             }
