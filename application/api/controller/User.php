@@ -21,7 +21,7 @@ class User extends Controller
         if (!$find) {
             return _fail('token错误！');
         }
-        $list = Db::table('order')->where(['uid' => $find['id']])->order('id desc')->select();
+        $list = Db::table('order')->where(['uid' => $find['id']])->order('id desc')->limit(10)->select();
         return _success('', $list);
     }
 

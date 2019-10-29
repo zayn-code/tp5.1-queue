@@ -12,12 +12,13 @@ class NotifyOrder
     public function fire(Job $job, $data)
     {
         $result = json_decode(_doCurl($data['notify_url'], 'post', $data), true);
-        if ($result['code'] === 200) {
-            echo '回调成功';
+        if ($result['code'] == 200) {
+            echo $result['msg'];
             $job->delete();
         } else {
             echo $result['msg'];
             if ($job->attempts() >= self::notifyAttempts) {
+                echo '次数超过fail';
                 $job->failed();
             } else {
                 $job->release(self::notifyDelay);

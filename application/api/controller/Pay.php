@@ -35,12 +35,12 @@ class Pay extends Controller
         }
         $result = $userList[array_rand($userList)];
         $order = [
-            'order_id'   => date('YmdHis') . rand(1000, 9999),
-            'attach'     => $data['attach'],
-            'money'      => $result['money'],
-            'date'       => date('Y-m-d H:i:s'),
+            'order_id' => date('YmdHis') . rand(1000, 9999),
+            'attach' => $data['attach'],
+            'money' => $result['money'],
+            'date' => date('Y-m-d H:i:s'),
             'notify_url' => $data['notify_url'],
-            'uid'        => $result['uid']
+            'uid' => $result['uid']
         ];
         Db::startTrans();
         $judInsert = Db::table('order')->insert($order);
@@ -48,7 +48,7 @@ class Pay extends Controller
         if ($judInsert && $judUpdate) {
             Db::commit();
             Cache::set($result['account'] . '_' . $result['money'], $order['order_id'], 60);
-            return _success('下单成功！', ['money' => $result['money'], 'url' => $result['ewm']]);
+            return _success('下单成功！', ['money' => $result['money'], 'url' => 'http://' . $_SERVER['HTTP_HOST'] . $result['ewm'], 'order' => $order['order_id']]);
         } else {
             Db::rollback();
             return _fail('下单失败！');
@@ -74,12 +74,12 @@ class Pay extends Controller
             return _fail('当前额度支付人太多，请稍后再试，或换其他额度支付');
         }
         $order = [
-            'order_id'   => date('YmdHis') . rand(1000, 9999),
-            'attach'     => $data['attach'],
-            'money'      => $payMoney,
-            'date'       => date('Y-m-d H:i:s'),
+            'order_id' => date('YmdHis') . rand(1000, 9999),
+            'attach' => $data['attach'],
+            'money' => $payMoney,
+            'date' => date('Y-m-d H:i:s'),
             'notify_url' => $data['notify_url'],
-            'uid'        => $user['id']
+            'uid' => $user['id']
         ];
         if (Db::table('order')->insert($order)) {
             Cache::set($user['account'] . '_' . $payMoney, $order['order_id'], 60);
