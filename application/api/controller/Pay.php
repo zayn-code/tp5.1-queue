@@ -47,7 +47,7 @@ class Pay extends Controller
         $judUpdate = Db::table('user_moneys')->where(['id' => $result['id']])->update(['datetime' => date('Y-m-d H:i:s')]);
         if ($judInsert && $judUpdate) {
             Db::commit();
-            Cache::set($result['account'] . '_' . $result['money'], $order['order_id'], 60);
+            Cache::set($result['account'] . '_' . $result['money'], $order['order_id'], 120);
             return _success('下单成功！', ['money' => $result['money'], 'url' => 'http://' . $_SERVER['HTTP_HOST'] . $result['ewm'], 'order' => $order['order_id']]);
         } else {
             Db::rollback();
