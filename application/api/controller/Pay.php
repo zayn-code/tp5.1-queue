@@ -26,7 +26,7 @@ class Pay extends Controller
 //            'notify_url' => 'http://127.0.0.1/cs.php'
 //        ];
         //下面是赞赏码支付------------------
-        $dateDiff = date('Y-m-d H:i:s', strtotime("-$this->cacheTime minute"));
+        $dateDiff = date('Y-m-d H:i:s', time() - $this->cacheTime);
         $userList = Db::table('user u')
             ->join('user_moneys um', 'um.uid=u.id')
             ->where(['status' => 1, 'money' => $data['money']])
