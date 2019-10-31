@@ -37,6 +37,7 @@ class Pay extends Controller
             return _fail('token错误');
         }
         $order_id = Cache::get($user['account'] . '_' . $data['money']);
+        Cache::rm($user['account'] . '_' . $data['money']);
         $findOrder = Db::table('order')->where(['order_id' => $order_id])->find();
         if (empty($order_id) || empty($findOrder)) {
             return _fail('订单不存在！');
