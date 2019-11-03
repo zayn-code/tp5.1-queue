@@ -6,20 +6,21 @@ use think\queue\Job;
 
 class QueryOrder
 {
-    const queryUrl = 'http://120.78.217.145/wxorder/porn/public/index/index/query?id=';
-    const queryAttempts = 5;    //查询次数
-    const queryDelay = 4;   //查询间隔（秒）
+    const queryUrl = 'http://www.iyuanma.top/wxorder/porn/public/index/index/query?id=';
+    const queryAttempts = 120;    //查询次数
+    const queryDelay = 5;   //查询间隔（秒）
     const notifyAttempts = 3;   //回调次数
     const notifyDelay = 3;   //回调间隔（秒）
 
     public function fire(Job $job, $data)
     {
-        $payStatus = _doCurl(self::queryUrl . $data['orderId']);
+        $payStatus = _doCurl(self::queryUrl . $data['order_id']);
         if ($payStatus === '支付成功') {
             echo '支付成功，回调次数：' . $job->attempts();
             //开始回调
             $notifyResult = _doCurl($data['notifyUrl'], 'post', $data);
-            if ($notifyResult['status'] === 'success') {
+            $notifyResult = json_decode($notifyResult, true);
+            if ($notifyResult['code'] == '200') {
                 $job->delete();
             } else {
                 if ($job->attempts() <= self::notifyAttempts) {

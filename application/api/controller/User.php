@@ -51,12 +51,12 @@ class User extends Controller
             $userMoneyList = [];
             foreach ($moneys as $money) {
                 $userMoneyList[] = [
-                    'uid'   => $find['id'],
+                    'uid' => $find['id'],
                     'money' => $money
                 ];
             }
             $judInsert = Db::table('user_moneys')->insertAll($userMoneyList);
-            $judUpdate = Db::table('user')->where(['token' => $data['token']])->update(['moneys' => $data['moneys'], 'ewm' => $data['ewm']]);
+            $judUpdate = Db::table('user')->where(['token' => $data['token']])->update(['moneys' => $data['moneys'], 'ewm' => $data['ewm'], 'nickname' => $data['nickname']]);
             if ($judUpdate && $judInsert && $delUserMoneys) {
                 Db::commit();
                 return _success('保存成功！');

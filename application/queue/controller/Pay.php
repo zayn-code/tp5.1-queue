@@ -10,14 +10,9 @@ use think\Queue;
 
 class Pay extends Controller
 {
-    public function queryOrder(Request $request)
+    public function queryOrder()
     {
-        $data = [
-            'orderID'   => '1569552131150',
-            'uid'       => '',
-            'notifyUrl' => '',
-            'money'     => ''
-        ];
+        $data = Request::post();
         $judge = Queue::push('app\queue\job\QueryOrder', $data, 'queryOrder');
         echo $judge;
     }
