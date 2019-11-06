@@ -1,221 +1,117 @@
--- phpMyAdmin SQL Dump
--- version 4.4.15.10
--- https://www.phpmyadmin.net
---
--- Host: localhost
--- Generation Time: 2019-10-29 21:02:49
--- 服务器版本： 5.5.57-log
--- PHP Version: 5.4.45
+/*
+Navicat MySQL Data Transfer
 
-SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-SET time_zone = "+00:00";
+Source Server         : 127.0.0.1
+Source Server Version : 50553
+Source Host           : 127.0.0.1:3306
+Source Database       : pay_server
 
+Target Server Type    : MYSQL
+Target Server Version : 50553
+File Encoding         : 65001
 
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8mb4 */;
+Date: 2019-11-06 16:28:02
+*/
 
---
--- Database: `pay_server`
---
+SET FOREIGN_KEY_CHECKS=0;
 
--- --------------------------------------------------------
-
---
--- 表的结构 `front_notify`
---
-
-CREATE TABLE IF NOT EXISTS `front_notify` (
-  `id` int(11) NOT NULL,
+-- ----------------------------
+-- Table structure for front_notify
+-- ----------------------------
+DROP TABLE IF EXISTS `front_notify`;
+CREATE TABLE `front_notify` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `money` decimal(10,2) DEFAULT NULL,
   `uid` int(11) DEFAULT NULL,
   `token` varchar(255) DEFAULT NULL,
-  `datetime` datetime DEFAULT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4;
+  `datetime` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='前台回调';
 
---
--- 转存表中的数据 `front_notify`
---
+-- ----------------------------
+-- Records of front_notify
+-- ----------------------------
 
-INSERT INTO `front_notify` (`id`, `money`, `uid`, `token`, `datetime`) VALUES
-(1, '1.00', 1, 'b8afd92884c94a2b74a7f58eba287fea', '2019-10-29 19:59:10'),
-(2, '1.00', 1, 'b8afd92884c94a2b74a7f58eba287fea', '2019-10-29 20:00:53');
-
--- --------------------------------------------------------
-
---
--- 表的结构 `jobs`
---
-
-CREATE TABLE IF NOT EXISTS `jobs` (
-  `id` int(11) NOT NULL,
+-- ----------------------------
+-- Table structure for jobs
+-- ----------------------------
+DROP TABLE IF EXISTS `jobs`;
+CREATE TABLE `jobs` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `queue` varchar(255) NOT NULL,
   `payload` longtext NOT NULL,
   `attempts` tinyint(3) unsigned NOT NULL,
   `reserved` tinyint(3) unsigned NOT NULL,
   `reserved_at` int(10) unsigned DEFAULT NULL,
   `available_at` int(10) unsigned NOT NULL,
-  `created_at` int(10) unsigned NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+  `created_at` int(10) unsigned NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='异步回调任务';
 
---
--- 转存表中的数据 `jobs`
---
+-- ----------------------------
+-- Records of jobs
+-- ----------------------------
 
-INSERT INTO `jobs` (`id`, `queue`, `payload`, `attempts`, `reserved`, `reserved_at`, `available_at`, `created_at`) VALUES
-(1, 'NotifyOrder', '{"job":"app\\\\queue\\\\job\\\\NotifyOrder","data":{"id":13,"order_id":"201910272300187399","attach":"10012","money":"1.00","date":"2019-10-27 23:00:18","notify_url":"http:\\/\\/127.0.0.1\\/cs.php","status":0,"uid":1}}', 0, 0, NULL, 1572188439, 1572188439);
-
--- --------------------------------------------------------
-
---
--- 表的结构 `order`
---
-
-CREATE TABLE IF NOT EXISTS `order` (
-  `id` int(11) NOT NULL,
+-- ----------------------------
+-- Table structure for order
+-- ----------------------------
+DROP TABLE IF EXISTS `order`;
+CREATE TABLE `order` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `order_id` varchar(255) DEFAULT NULL,
   `attach` varchar(255) DEFAULT NULL,
   `money` decimal(10,2) DEFAULT NULL,
   `date` datetime DEFAULT NULL,
   `notify_url` varchar(255) DEFAULT NULL,
   `status` tinyint(1) NOT NULL DEFAULT '0' COMMENT '0未支付，1支付成功',
-  `uid` int(11) NOT NULL
-) ENGINE=MyISAM AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4;
+  `uid` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COMMENT='下单订单';
 
---
--- 转存表中的数据 `order`
---
+-- ----------------------------
+-- Records of order
+-- ----------------------------
 
-INSERT INTO `order` (`id`, `order_id`, `attach`, `money`, `date`, `notify_url`, `status`, `uid`) VALUES
-(1, '201910132056298145', '10012', '1.00', '2019-10-13 20:56:29', 'http://127.0.0.1/cs.php', 0, 0),
-(2, '201910132105238037', '10012', '1.00', '2019-10-13 21:05:23', 'http://127.0.0.1/cs.php', 1, 0),
-(3, '201910132105412316', '10012', '2.00', '2019-10-13 21:05:41', 'http://127.0.0.1/cs.php', 0, 0),
-(4, '201910132118333462', '10012', '1.00', '2019-10-13 21:18:33', 'http://127.0.0.1/cs.php', 1, 0),
-(5, '201910132120378691', '10012', '1.00', '2019-10-13 21:20:37', 'http://127.0.0.1/cs.php', 1, 0),
-(6, '201910132120518077', '10012', '2.00', '2019-10-13 21:20:51', 'http://127.0.0.1/cs.php', 0, 0),
-(7, '201910132121189425', '10012', '3.00', '2019-10-13 21:21:18', 'http://127.0.0.1/cs.php', 0, 0),
-(8, '201910132121245978', '10012', '4.00', '2019-10-13 21:21:24', 'http://127.0.0.1/cs.php', 0, 0),
-(9, '201910132124019825', '10012', '1.00', '2019-10-13 21:24:01', 'http://127.0.0.1/cs.php', 1, 1),
-(10, '201910132236264234', '10012', '1.00', '2019-10-13 22:36:26', 'http://127.0.0.1/cs.php', 1, 1),
-(11, '201910272217077182', '10012', '1.00', '2019-10-27 22:17:07', 'http://127.0.0.1/cs.php', 0, 10),
-(12, '201910272234109164', '10012', '1.00', '2019-10-27 22:34:10', 'http://127.0.0.1/cs.php', 0, 1),
-(13, '201910272300187399', '10012', '1.00', '2019-10-27 23:00:18', 'http://127.0.0.1/cs.php', 1, 1),
-(14, '201910292059188930', '7303', '1.00', '2019-10-29 20:59:18', 'http://rywa.grdszgs.com/Home/Wxpay/threePayNotify', 0, 1);
-
--- --------------------------------------------------------
-
---
--- 表的结构 `user`
---
-
-CREATE TABLE IF NOT EXISTS `user` (
-  `id` int(11) NOT NULL,
+-- ----------------------------
+-- Table structure for user
+-- ----------------------------
+DROP TABLE IF EXISTS `user`;
+CREATE TABLE `user` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `account` varchar(20) DEFAULT NULL,
+  `nickname` varchar(50) NOT NULL,
   `password` varchar(50) DEFAULT NULL,
   `status` tinyint(1) NOT NULL DEFAULT '0' COMMENT '状态0未启用1已启用',
   `ewm` varchar(500) DEFAULT NULL,
   `moneys` varchar(255) DEFAULT NULL,
   `total_money` decimal(10,2) NOT NULL DEFAULT '0.00',
-  `token` varchar(255) DEFAULT NULL
-) ENGINE=MyISAM AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4;
+  `token` varchar(255) DEFAULT NULL,
+  `is_delete` tinyint(1) NOT NULL DEFAULT '0' COMMENT '0正常1删除',
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COMMENT='收款用户';
 
---
--- 转存表中的数据 `user`
---
+-- ----------------------------
+-- Records of user
+-- ----------------------------
+INSERT INTO `user` VALUES ('1', 'zayn1', '呵呵', 'e10adc3949ba59abbe56e057f20f883e', '0', '/uploads/20191030/29f2ae714a2013725a458e4a4fd70e7e.png', '1,5', '12.00', 'b8afd92884c94a2b74a7f58eba287fea', '0');
+INSERT INTO `user` VALUES ('6', 'abcd55', '', 'ab25cdbd759039967bac0dbd12f05bbc', '0', '/uploads/20191029/bc020b0b69b9986edd8002dda33dd16b.png', '0.1,0.2,0.3,0.4,0.5', '27.70', '7638ee5f4b8ac3a2dc1a96ea7127e1f3', '0');
+INSERT INTO `user` VALUES ('7', 'zayn2', '', 'e10adc3949ba59abbe56e057f20f883e', '0', null, null, '0.00', '984a51cc7ef7108e798c7dbd92a41ccf', '0');
+INSERT INTO `user` VALUES ('8', 'xxxxxxxxx', '等等等等', '4338a860fedb6bf55b6adcc7e9d6337a', '1', '/uploads/20191103/bf0c5ba310d07e6c18471e417282912d.png', '12,24,36,50,200', '25.60', '0fa0c84bfc08c7a8d13ed770e3010b0b', '0');
+INSERT INTO `user` VALUES ('9', 'zayn123', 'hhbj', 'e10adc3949ba59abbe56e057f20f883e', '0', '/uploads/20191103/a73a815918a2652b91b8a8c62d16f17d.png', '55,67', '0.00', '4a9fc6ef01a835308e139416b0265231', '0');
+INSERT INTO `user` VALUES ('10', 'hl111111', '共勉', '670b14728ad9902aecba32e22fa4f6bd', '1', '/uploads/20191105/4cb139b120a09d74f4a900db3c84c8a5.png', '12,24,36,50,100,200', '36.00', '28c60c377a142f3a101ea6c021be9801', '0');
 
-INSERT INTO `user` (`id`, `account`, `password`, `status`, `ewm`, `moneys`, `total_money`, `token`) VALUES
-(1, 'zayn1', 'e10adc3949ba59abbe56e057f20f883e', 1, '/uploads/20191027/91f63f9e7f34e900ec6c29bfacadcac9.png', '1,5', '6.00', 'b8afd92884c94a2b74a7f58eba287fea'),
-(2, 'zayn2', 'e10adc3949ba59abbe56e057f20f883e', 0, NULL, NULL, '0.00', '5d9720758cb4d9f6b4ea6ec15c0bb32e'),
-(3, 'zayn3', 'e10adc3949ba59abbe56e057f20f883e', 0, NULL, NULL, '0.00', 'd24b3f3786da3e5eba83c4c3f8c18bcf'),
-(4, 'zayn4', 'e10adc3949ba59abbe56e057f20f883e', 0, NULL, NULL, '0.00', 'c44bccbba23e8eae51a6d1d46134d65b'),
-(5, 'zayn5', 'e10adc3949ba59abbe56e057f20f883e', 0, NULL, NULL, '0.00', '8b4b98b85c9beed003f8240e0d83fca4');
-
--- --------------------------------------------------------
-
---
--- 表的结构 `user_moneys`
---
-
-CREATE TABLE IF NOT EXISTS `user_moneys` (
-  `id` int(11) NOT NULL,
+-- ----------------------------
+-- Table structure for user_moneys
+-- ----------------------------
+DROP TABLE IF EXISTS `user_moneys`;
+CREATE TABLE `user_moneys` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `uid` int(11) NOT NULL,
   `money` decimal(10,2) NOT NULL,
-  `datetime` datetime NOT NULL DEFAULT '1970-01-01 00:00:00'
-) ENGINE=MyISAM AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4;
+  `datetime` datetime NOT NULL DEFAULT '1970-01-01 00:00:00' COMMENT '下单时间，判断二维码是否被占用',
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COMMENT='收款用户的赞赏码金额列表';
 
---
--- 转存表中的数据 `user_moneys`
---
-
-INSERT INTO `user_moneys` (`id`, `uid`, `money`, `datetime`) VALUES
-(11, 1, '5.00', '1970-01-01 00:00:00'),
-(10, 1, '1.00', '2019-10-29 20:59:18'),
-(9, 2, '2.00', '1970-01-01 00:00:00');
-
---
--- Indexes for dumped tables
---
-
---
--- Indexes for table `front_notify`
---
-ALTER TABLE `front_notify`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `jobs`
---
-ALTER TABLE `jobs`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `order`
---
-ALTER TABLE `order`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `user`
---
-ALTER TABLE `user`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `user_moneys`
---
-ALTER TABLE `user_moneys`
-  ADD PRIMARY KEY (`id`);
-
---
--- AUTO_INCREMENT for dumped tables
---
-
---
--- AUTO_INCREMENT for table `front_notify`
---
-ALTER TABLE `front_notify`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=3;
---
--- AUTO_INCREMENT for table `jobs`
---
-ALTER TABLE `jobs`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
---
--- AUTO_INCREMENT for table `order`
---
-ALTER TABLE `order`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=15;
---
--- AUTO_INCREMENT for table `user`
---
-ALTER TABLE `user`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=6;
---
--- AUTO_INCREMENT for table `user_moneys`
---
-ALTER TABLE `user_moneys`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=12;
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+-- ----------------------------
+-- Records of user_moneys
+-- ----------------------------

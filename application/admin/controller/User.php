@@ -10,7 +10,7 @@ class User extends Controller
 {
     public function userList()
     {
-        return $this->fetch('userList', ['list' => $this->getUserList()]);
+        return $this->fetch('userList');
     }
 
     public function changeStatus()
@@ -30,12 +30,19 @@ class User extends Controller
         }
     }
 
+    public function delUser()
+    {
+        $id = Request::param('id');
+        Db::table('user')->where(['id'=>$id])->update(['is_delete'=>1]);
+    }
+
     public function getUserList()
     {
-        $list = Db::table('user')->select();
-        foreach ($list as &$item) {
+        $limit = Request::param('limit');
+        $list = Db::table('user')->where(['is_delete' => 0])->paginate($limit)->toArray();
+        foreach ($list['data'] as &$item) {
             $item['ewm'] = 'http://' . $_SERVER['HTTP_HOST'] . $item['ewm'];
         }
-        return json_encode($list, 64);
+        return json($list);
     }
 }

@@ -7,40 +7,73 @@
 </head>
 <body>
 <div id="app">
-    <el-table
-            :data="tableData"
-            border
-            style="width: 100%">
-        <el-table-column
-                prop="id"
-                label="ID">
-        </el-table-column>
-        <el-table-column
-                prop="account"
-                label="账户">
-        </el-table-column>
-        <el-table-column
-                prop="nickname"
-                label="昵称">
-        </el-table-column>
-        <el-table-column
-                prop="moneys"
-                label="收款金额">
-        </el-table-column>
-        <el-table-column
-                label="收款码">
-            <template slot-scope="scope">
-                <img :src="scope.row.ewm" style="width:80px" />
-            </template>
-        </el-table-column>
-        <el-table-column
-                label="状态">
-            <template slot-scope="scope">
-                <el-button
-                        :type="scope.row.status === 1 ? 'success' : 'error'" @click="changeStatus(scope.row.id,scope.row.status)">{{scope.row.status ? '开启中' : '未开启'}}</el-button>
-            </template>
-        </el-table-column>
-    </el-table>
+    <div v-if="token">
+        <el-table
+                :data="tableData"
+                border
+                style="width: 100%">
+            <el-table-column
+                    prop="id"
+                    label="ID">
+            </el-table-column>
+            <el-table-column
+                    prop="account"
+                    label="账户">
+            </el-table-column>
+            <el-table-column
+                    prop="nickname"
+                    label="昵称">
+            </el-table-column>
+            <el-table-column
+                    prop="moneys"
+                    label="收款金额">
+            </el-table-column>
+            <el-table-column
+                    label="收款码">
+                <template slot-scope="scope">
+                    <img :src="scope.row.ewm" style="width:80px"/>
+                </template>
+            </el-table-column>
+            <el-table-column
+                    label="状态">
+                <template slot-scope="scope">
+                    <el-button
+                            :type="scope.row.status === 1 ? 'success' : 'error'"
+                            @click="changeStatus(scope.row.id,scope.row.status)">{{scope.row.status ? '开启中' : '未开启'}}
+                    </el-button>
+                </template>
+            </el-table-column>
+            <el-table-column>
+                <template slot-scope="scope">
+                    <el-button
+                            type="danger"
+                            @click="del(scope.row.id)">删除
+                    </el-button>
+                </template>
+            </el-table-column>
+        </el-table>
+        <el-pagination
+                @size-change="handleSizeChange"
+                @current-change="handleCurrentChange"
+                :current-page="page.currentPage"
+                :page-sizes="[5,10,15,30,50]"
+                :page-size="page.limit"
+                layout="total, sizes, prev, pager, next, jumper"
+                :total="page.total">
+        </el-pagination>
+    </div>
+
+    <el-form v-if="!token" ref="login" :model="login" label-width="80px" @keyup.enter.native="onSubmit">
+        <el-form-item label="用户名">
+            <el-input v-model="login.account"></el-input>
+        </el-form-item>
+        <el-form-item label="密码">
+            <el-input v-model="login.password" show-password></el-input>
+        </el-form-item>
+        <el-form-item>
+            <el-button type="primary" @click="onSubmit">登录</el-button>
+        </el-form-item>
+    </el-form>
 </div>
 </body>
 <script src="/static/js/jquery.min.js"></script>
@@ -49,26 +82,77 @@
 <!-- import JavaScript -->
 <script src="https://unpkg.com/element-ui/lib/index.js"></script>
 <script>
-    var list = '{$list}'.replace(/&quot;/g, '"');
-    list = JSON.parse(list);
     new Vue({
         el: '#app',
         data: function () {
             return {
-                tableData: list
+                tableData: [],
+                page: {
+                    currentPage: 1,
+                    total: 0,
+                    limit: 5
+                },
+                token: sessionStorage.getItem('token'),
+                login: {
+                    account: '',
+                    password: ''
+                }
             }
         },
-        methods:{
-            changeStatus:function(id,status){
+        methods: {
+            onSubmit() {
+                const that = this;
+                $.post('{:url("api/login/index")}', {
+                    account: this.login.account,
+                    password: this.login.password
+                }, function (res) {
+                    that.$message({
+                        message: res.msg,
+                        type: res.code === 200 ? 'success' : 'error'
+                    });
+                    if (res.code === 200) {
+                        that.token = res.data.token;
+                        sessionStorage.setItem('token', res.data.token)
+                    }
+                })
+            },
+            handleSizeChange(val) {
+                this.page.limit = val;
+                this.getTableData();
+            },
+            handleCurrentChange(val) {
+                this.page.currentPage = val;
+                this.getTableData();
+            },
+            changeStatus(id, status) {
                 const that = this;
                 $.post(
                     '{:url("changeStatus")}',
-                    {id:id,status:status},
+                    {id: id, status: status},
                     function (res) {
-                        window.location.reload();
+                        that.getTableData();
                     }
                 )
+            },
+            del(id) {
+                const that = this;
+                $.post('{:url("delUser")}', {id: id}, function () {
+                    that.getTableData();
+                })
+            },
+            getTableData() {
+                const list = $.ajax({
+                    async: false,
+                    data: {limit: this.page.limit, page: this.page.currentPage},
+                    url: '{:url("getUserList")}'
+                }).responseJSON;
+                console.log(list);
+                this.tableData = list.data;
+                this.page.total = list.total;
             }
+        },
+        mounted: function () {
+            this.getTableData();
         }
     })
 </script>
