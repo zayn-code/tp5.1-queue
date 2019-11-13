@@ -29,7 +29,7 @@ class Pay extends Controller
         $dateDiff = date('Y-m-d H:i:s', time() - $this->cacheTime);
         $userList = Db::table('user u')
             ->join('user_moneys um', 'um.uid=u.id')
-            ->where(['status' => 1, 'money' => $data['money']])
+            ->where(['is_delete' => 0, 'status' => 1, 'money' => $data['money']])
             ->where('datetime', '<', $dateDiff)
             ->select();
         if (empty($userList)) {
