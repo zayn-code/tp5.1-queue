@@ -33,13 +33,24 @@ class User extends Controller
     public function delUser()
     {
         $id = Request::param('id');
-        Db::table('user')->where(['id'=>$id])->update(['is_delete'=>1]);
+        Db::table('user')->where(['id' => $id])->update(['is_delete' => 1]);
     }
 
     public function getUserList()
     {
-        $limit = Request::param('limit');
-        $list = Db::table('user')->where(['is_delete' => 0])->paginate($limit)->toArray();
+        $param = Request::param();
+        $condition = [];
+        if (!empty($param['status']) || $param['status'] === '0') {
+            $condition[] = ['status', '=', $param['status']];
+        }
+        if (!empty($param['nickname'])) {
+            $condition[] = ['nickname', 'like', '%' . $param['nickname'] . '%'];
+        }
+        $list = Db::table('user')
+            ->where(['is_delete' => 0])
+            ->where($condition)
+            ->paginate($param['limit'])
+            ->toArray();
         foreach ($list['data'] as &$item) {
             $item['ewm'] = 'http://' . $_SERVER['HTTP_HOST'] . $item['ewm'];
         }

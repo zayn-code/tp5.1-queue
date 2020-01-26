@@ -6,12 +6,28 @@
     <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
 </head>
 <body>
-<div id="app">
+<div id="app" style="">
     <div v-if="token">
+        <el-form :model="queryData" label-width="40px" inline label-position="left" @keyup.enter.native="getTableData">
+            <el-form-item label="昵称">
+                <el-input v-model="queryData.nickname"/>
+            </el-form-item>
+            <el-form-item label="状态">
+                <el-select v-model="queryData.status" placeholder="是否开启">
+                    <el-option label="全部" value=""></el-option>
+                    <el-option label="未启用" value="0"></el-option>
+                    <el-option label="启用中" value="1"></el-option>
+                </el-select>
+            </el-form-item>
+            <el-form-item>
+                <el-button @click="getTableData" type="primary">搜索</el-button>
+            </el-form-item>
+        </el-form>
         <el-table
                 :data="tableData"
                 border
-                style="width: 100%">
+                stripe
+                style="width: 100%;max-width: 1200px">
             <el-table-column
                     prop="id"
                     label="ID">
@@ -80,12 +96,16 @@
 <!-- import Vue before Element -->
 <script src="/static/js/vue.js"></script>
 <!-- import JavaScript -->
-<script src="https://unpkg.com/element-ui/lib/index.js"></script>
+<script src="/static/js/index.js"></script>
 <script>
     new Vue({
         el: '#app',
         data: function () {
             return {
+                queryData: {
+                    status: null,
+                    nickname: ''
+                },
                 tableData: [],
                 page: {
                     currentPage: 1,
@@ -141,9 +161,15 @@
                 })
             },
             getTableData() {
+                const queryData = {
+                    status: this.queryData.status,
+                    nickname: this.queryData.nickname,
+                    limit: this.page.limit,
+                    page: this.page.currentPage
+                };
                 const list = $.ajax({
                     async: false,
-                    data: {limit: this.page.limit, page: this.page.currentPage},
+                    data: queryData,
                     url: '{:url("getUserList")}'
                 }).responseJSON;
                 console.log(list);
@@ -156,4 +182,19 @@
         }
     })
 </script>
+<style>
+    body{
+        background-color: #edefe8;
+    }
+    .el-table__header{
+        background: #868686;
+    }
+    .el-table th{
+        background-color: #9453d7;
+        color: #fff;
+    }
+    .el-table tr{
+        background-color: #e2dede;
+    }
+</style>
 </html>
