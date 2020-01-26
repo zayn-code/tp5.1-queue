@@ -47,7 +47,7 @@
             <el-table-column
                     label="收款码">
                 <template slot-scope="scope">
-                    <img :src="scope.row.ewm" style="width:80px"/>
+                    <img :src="scope.row.ewm" style="width:35px"/>
                 </template>
             </el-table-column>
             <el-table-column
@@ -110,7 +110,7 @@
                 page: {
                     currentPage: 1,
                     total: 0,
-                    limit: 5
+                    limit: 10
                 },
                 token: sessionStorage.getItem('token'),
                 login: {
